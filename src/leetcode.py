@@ -105,6 +105,52 @@ def find_smallest(xs, lo=0, hi=None):
     >>> find_smallest([]) is None
     True
     '''
+    if len(xs) == 0:
+        return None
+
+    left = 0
+    right = len(xs) - 1
+
+    while left != right:
+        mid = (left + right) // 2
+        if xs[mid] > xs[mid + 1]:
+            left = mid + 1
+        else:
+            right = mid
+
+    return left
+
+
+def _first_leq(xs, x):
+    '''
+    Descending xs. Return the lowest index i with xs[i] <= x,
+    or len(xs) if no such index exists.
+    '''
+    left = 0
+    right = len(xs)
+    while left < right:
+        mid = (left + right) // 2
+        if xs[mid] <= x:
+            right = mid
+        else:
+            left = mid + 1
+    return left
+
+
+def _first_lt(xs, x):
+    '''
+    Descending xs. Return the lowest index i with xs[i] < x,
+    or len(xs) if no such index exists.
+    '''
+    left = 0
+    right = len(xs)
+    while left < right:
+        mid = (left + right) // 2
+        if xs[mid] < x:
+            right = mid
+        else:
+            left = mid + 1
+    return left
 
 
 def count_repeats(xs, x):
@@ -128,3 +174,4 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
+    return _first_lt(xs, x) - _first_leq(xs, x)
