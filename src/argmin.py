@@ -109,6 +109,21 @@ def bounded_argmin(f, lo, hi, epsilon=1e-3):
         the base of the log and the (hi-lo) factor drop out,
         giving us k = O(log 1/epsilon).
     '''
+    while hi - lo > epsilon:
+        m1 = lo + (hi - lo) / 3.0
+        m2 = hi - (hi - lo) / 3.0
+
+        if f(m1) < f(m2):
+            hi = m2
+        elif f(m1) > f(m2):
+            lo = m1
+        else:
+            # If they are equal (or indistinguishable due to floating point),
+            # the minimum lies between m1 and m2.
+            lo = m1
+            hi = m2
+
+    return (lo + hi) / 2.0
 
 
 def find_boundaries(f):
@@ -127,3 +142,15 @@ def find_boundaries(f):
     else:
         you're done; return lo,hi
     '''
+    lo = -1.0
+    hi = 1.0
+
+    while True:
+        mid = (lo + hi) / 2.0
+
+        if f(lo) < f(mid):
+            lo *= 2.0
+        elif f(hi) < f(mid):
+            hi *= 2.0
+        else:
+            return lo, hi
